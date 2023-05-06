@@ -35,6 +35,10 @@ const completeState = (index) => {
     todoList.value[index].category = "Uncompleted";
   }
 };
+
+const deleteCurrentTodo = (todoId) => {
+  todoList.value = todoList.value.filter((todo) => todo.id !== todo.id);
+};
 </script>
 
 <template>

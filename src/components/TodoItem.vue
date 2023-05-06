@@ -3,6 +3,10 @@ import { defineProps } from "vue";
 import { ref } from "vue";
 import "primevue/resources/themes/bootstrap4-light-blue/theme.css";
 import "primevue/resources/primevue.min.css";
+import Dialog from "primevue/dialog";
+import ConfirmDialog from "primevue/confirmdialog";
+import { useToast } from "primevue/usetoast";
+import { useConfirm } from "primevue/useconfirm";
 
 const props = defineProps({
   todo: {
@@ -15,10 +19,41 @@ const props = defineProps({
   },
 });
 
+// open settings
+
 const customSettings = ref(false);
 const openSettings = () => {
   customSettings.value = !customSettings.value;
 };
+
+const visible = ref(false);
+
+// delete
+const confirm = useConfirm();
+const toast = useToast();
+
+const deleteTodo = () => {
+  confirm.require({
+    message: "Do you want to delete this record?",
+    header: "Delete Confirmation",
+    icon: "pi pi-info-circle",
+    acceptClass: "p-button-danger",
+    accept: () => {
+      deleteCurrentTodo();
+    },
+    reject: () => {
+      toast.add({
+        severity: "error",
+        summary: "Rejected",
+        detail: "You have rejected",
+        life: 3000,
+      });
+    },
+  });
+};
+
+// edit
+const editValue = ref("");
 </script>
 
 <template>
@@ -33,8 +68,8 @@ const openSettings = () => {
               :value="todo.isCompleted"
               @input="$emit('complete-state', index)"
             />
-            <input v-if="todo.isEditing" type="text" :value="todo.todo" />
-            <p v-else :class="{ checked: todo.isCompleted }">{{ todo.todo }}</p>
+
+            <p :class="{ checked: todo.isCompleted }">{{ todo.todo }}</p>
           </div>
           <div class="taskRight">
             <!-- <p
@@ -45,38 +80,62 @@ const openSettings = () => {
             >
               {{ todo.category }}
             </p> -->
-
+            <font-awesome-icon v-if="todo.isEditing" icon="fa-solid fa-check" />
             <font-awesome-icon
               class="seeMoreTodo"
               icon="fa-solid fa-ellipsis-vertical"
               @click="openSettings()"
             />
             <div v-if="customSettings == true" class="settings">
-              <a href="">
+              <section @click="visible = true">
                 <div class="settingsContainer">
                   <div class="settingsSubContainer">
                     <font-awesome-icon icon="fa-solid fa-file-pen" />
                     <div>Edit</div>
                   </div>
                 </div>
-              </a>
-              <a href="">
+              </section>
+              <section>
                 <div class="settingsContainer">
                   <div class="settingsSubContainer">
                     <font-awesome-icon icon="fa-solid fa-circle-info" />
                     <div>Info</div>
                   </div>
                 </div>
-              </a>
-              <a href="">
-                <div class="settingsContainer">
+              </section>
+              <section>
+                <div @click="deleteTodo()" class="settingsContainer">
                   <div class="settingsSubContainer">
                     <font-awesome-icon icon="fa-solid fa-box-archive" />
                     <div>Archive</div>
                   </div>
                 </div>
-              </a>
+              </section>
             </div>
+            <Dialog
+              v-model:visible="visible"
+              modal
+              header="Edit"
+              :style="{ width: '50vw' }"
+            >
+              <div class="dialogContent">
+                <input
+                  v-model="editValue"
+                  @keyup.enter="(todo.todo = editValue) && (visible = false)"
+                  class="editInput"
+                  type="text"
+                  placeholder="Type something..."
+                />
+                <button
+                  @click="(todo.todo = editValue) && (visible = false)"
+                  type="submit"
+                >
+                  Confirm
+                </button>
+              </div>
+            </Dialog>
+            <Toast></Toast>
+            <ConfirmDialog></ConfirmDialog>
           </div>
         </div>
       </div>
@@ -105,6 +164,7 @@ const openSettings = () => {
 
 .newTask:hover {
   cursor: pointer;
+  background-color: rgb(237, 237, 237);
 }
 
 .taskLeft {
@@ -176,7 +236,7 @@ const openSettings = () => {
   border-radius: 10px;
 }
 
-.settings a div {
+.settings section div {
   text-decoration: none;
   color: rgb(31, 31, 31);
   padding: 6px 6px 6px 10px;
@@ -184,7 +244,7 @@ const openSettings = () => {
   margin: auto;
 }
 
-.settings a {
+.settings section {
   text-decoration: none;
   font-size: 0.95em;
 }
@@ -214,5 +274,35 @@ const openSettings = () => {
   justify-content: flex-start;
   width: 80%;
   margin: auto;
+}
+
+.fa-check {
+  color: rgb(21, 24, 21);
+}
+.dialogContent {
+  display: flex;
+  gap: 10px;
+}
+.dialogContent button {
+  padding: 10px;
+  border: none;
+  background-color: #335af3;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+  width: 15%;
+}
+
+.dialogContent button:hover {
+  background-color: #375beb;
+}
+.editInput {
+  padding: 15px;
+  width: 100%;
+  border-radius: 10px;
+  background-color: whitesmoke;
+  border: none;
+  outline: none;
+  font-size: 0.95em;
 }
 </style>
