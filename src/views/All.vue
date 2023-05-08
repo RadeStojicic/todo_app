@@ -3,6 +3,8 @@ import { ref } from "vue";
 import { v4 as uuidv4 } from "uuid";
 import TodoApp from "../components/TodoApp.vue";
 import TodoItem from "../components/TodoItem.vue";
+import { useConfirm } from "primevue/useconfirm";
+
 
 const todoList = ref([]);
 
@@ -22,6 +24,7 @@ const createTodo = (todo) => {
     isCompleted: false,
     category: "Uncompleted",
     isEditing: false,
+    customSettings: false
   });
 };
 
@@ -36,8 +39,34 @@ const completeState = (index) => {
   }
 };
 
-const deleteCurrentTodo = (todoId) => {
-  todoList.value = todoList.value.filter((todo) => todo.id !== todo.id);
+const showSettings = (index) => {
+  todoList.value.forEach((item, i) => {
+    if (i === index) {
+      item.customSettings = !item.customSettings;
+    } else {
+      item.customSettings = false;
+    }
+  });
+};
+
+
+const confirm = useConfirm();
+const deleteTodo = (index) => {
+  const isDeleteVisible = ref(false)
+    confirm.require({
+        message: 'Do you want to delete this task?',
+        header: 'Delete Confirmation',
+        icon: 'pi pi-info-circle',
+        acceptClass: 'p-button-danger',
+        accept: () => {
+             todoList.value = todoList.value.filter((todo) => todo.id!==todoList.value[index].id);
+              isDeleteVisible.value=false
+        },
+        reject: () => {
+            console.log("Reject") 
+            isDeleteVisible.value=false
+         }
+    });
 };
 </script>
 
@@ -53,6 +82,8 @@ const deleteCurrentTodo = (todoId) => {
           :todo="todo"
           :category="category"
           @complete-state="completeState"
+          @show-settings="showSettings"
+          @delete-todo="deleteTodo"
         />
       </li>
     </ul>

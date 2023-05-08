@@ -1,12 +1,11 @@
 <script setup>
 import { defineProps } from "vue";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import "primevue/resources/themes/bootstrap4-light-blue/theme.css";
 import "primevue/resources/primevue.min.css";
 import Dialog from "primevue/dialog";
 import ConfirmDialog from "primevue/confirmdialog";
-import { useToast } from "primevue/usetoast";
-import { useConfirm } from "primevue/useconfirm";
+
 
 const props = defineProps({
   todo: {
@@ -19,41 +18,32 @@ const props = defineProps({
   },
 });
 
-// open settings
-
-const customSettings = ref(false);
-const openSettings = () => {
-  customSettings.value = !customSettings.value;
-};
-
 const visible = ref(false);
-
-// delete
-const confirm = useConfirm();
-const toast = useToast();
-
-const deleteTodo = () => {
-  confirm.require({
-    message: "Do you want to delete this record?",
-    header: "Delete Confirmation",
-    icon: "pi pi-info-circle",
-    acceptClass: "p-button-danger",
-    accept: () => {
-      deleteCurrentTodo();
-    },
-    reject: () => {
-      toast.add({
-        severity: "error",
-        summary: "Rejected",
-        detail: "You have rejected",
-        life: 3000,
-      });
-    },
-  });
-};
+const settingsRef = ref(null);
 
 // edit
 const editValue = ref("");
+
+const checkForError = () => {
+  if(editValue.value!='') {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+const handleClickOutside = (event) => {
+      if (settingsRef.value && !settingsRef.value==event.target) {
+        visible.value = false;  
+      }
+};
+
+onMounted(() => {
+      document.addEventListener('click', handleClickOutside);
+    });
+
+const visibleDeleteBool = ref(false)
+
 </script>
 
 <template>
@@ -80,14 +70,13 @@ const editValue = ref("");
             >
               {{ todo.category }}
             </p> -->
-            <font-awesome-icon v-if="todo.isEditing" icon="fa-solid fa-check" />
             <font-awesome-icon
               class="seeMoreTodo"
               icon="fa-solid fa-ellipsis-vertical"
-              @click="openSettings()"
+              @click="$emit('show-settings', index); handleClickOutside()"
             />
-            <div v-if="customSettings == true" class="settings">
-              <section @click="visible = true">
+            <div v-if="todo.customSettings == true " class="settings">
+              <section @click="visible = true; settingsRef = true">
                 <div class="settingsContainer">
                   <div class="settingsSubContainer">
                     <font-awesome-icon icon="fa-solid fa-file-pen" />
@@ -104,7 +93,7 @@ const editValue = ref("");
                 </div>
               </section>
               <section>
-                <div @click="deleteTodo()" class="settingsContainer">
+                <div @click="$emit('delete-todo', index); visibleDeleteBool = true" class="settingsContainer" label="Delete">
                   <div class="settingsSubContainer">
                     <font-awesome-icon icon="fa-solid fa-box-archive" />
                     <div>Archive</div>
@@ -115,33 +104,31 @@ const editValue = ref("");
             <Dialog
               v-model:visible="visible"
               modal
-              header="Edit"
-              :style="{ width: '50vw' }"
+              header="Edit your task"
+              :style="{ width: '40vw' }"
             >
               <div class="dialogContent">
                 <input
                   v-model="editValue"
-                  @keyup.enter="(todo.todo = editValue) && (visible = false)"
+                  @keyup.enter="(checkForError())? (todo.todo = editValue) && (visible = false) : (visible=false)"
                   class="editInput"
                   type="text"
                   placeholder="Type something..."
                 />
                 <button
-                  @click="(todo.todo = editValue) && (visible = false)"
+                  @click="(checkForError())? (todo.todo = editValue) && (visible = false) : (visible=false)"
                   type="submit"
                 >
                   Confirm
                 </button>
               </div>
             </Dialog>
-            <Toast></Toast>
-            <ConfirmDialog></ConfirmDialog>
+            <ConfirmDialog v-if="visibleDeleteBool"></ConfirmDialog>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <!-- <font-awesome-icon icon="fa-solid fa-square-check" /> -->
 </template>
 
 <style scoped>
@@ -276,9 +263,6 @@ const editValue = ref("");
   margin: auto;
 }
 
-.fa-check {
-  color: rgb(21, 24, 21);
-}
 .dialogContent {
   display: flex;
   gap: 10px;
@@ -290,7 +274,7 @@ const editValue = ref("");
   color: white;
   border-radius: 10px;
   cursor: pointer;
-  width: 15%;
+  width: 20%;
 }
 
 .dialogContent button:hover {
