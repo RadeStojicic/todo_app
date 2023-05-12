@@ -11,6 +11,7 @@ import { faBoxArchive } from "@fortawesome/free-solid-svg-icons";
 import { faFilePen } from "@fortawesome/free-solid-svg-icons";
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight} from "@fortawesome/free-solid-svg-icons";
 import PrimeVue from "primevue/config";
 import ConfirmationService from "primevue/confirmationservice";
 import ToastService from "primevue/toastservice";
@@ -23,6 +24,7 @@ library.add(faBoxArchive);
 library.add(faFilePen);
 library.add(faCircleInfo);
 library.add(faCheck);
+library.add(faArrowRight);
 
 const app = createApp(App);
 app.component("font-awesome-icon", FontAwesomeIcon);

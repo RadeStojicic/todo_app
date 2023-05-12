@@ -1,11 +1,9 @@
 <script setup>
-import { defineProps } from "vue";
 import { ref, onMounted } from "vue";
 import "primevue/resources/themes/bootstrap4-light-blue/theme.css";
 import "primevue/resources/primevue.min.css";
 import Dialog from "primevue/dialog";
 import ConfirmDialog from "primevue/confirmdialog";
-
 
 const props = defineProps({
   todo: {
@@ -14,6 +12,10 @@ const props = defineProps({
   },
   index: {
     type: Number,
+    required: true,
+  },
+  dueToDate: {
+    type: Date,
     required: true,
   },
 });
@@ -25,25 +27,24 @@ const settingsRef = ref(null);
 const editValue = ref("");
 
 const checkForError = () => {
-  if(editValue.value!='') {
+  if (editValue.value != "") {
     return true;
   } else {
     return false;
   }
-}
+};
 
 const handleClickOutside = (event) => {
-      if (settingsRef.value && !settingsRef.value==event.target) {
-        visible.value = false;  
-      }
+  if (settingsRef.value && !settingsRef.value == event.target) {
+    visible.value = false;
+  }
 };
 
 onMounted(() => {
-      document.addEventListener('click', handleClickOutside);
-    });
+  document.addEventListener("click", handleClickOutside);
+});
 
-const visibleDeleteBool = ref(false)
-
+const visibleDialog = ref(false);
 </script>
 
 <template>
@@ -57,26 +58,27 @@ const visibleDeleteBool = ref(false)
               class="myCheckbox"
               :value="todo.isCompleted"
               @input="$emit('complete-state', index)"
+              :disabled="todo.category == 'Completed'"
             />
 
             <p :class="{ checked: todo.isCompleted }">{{ todo.todo }}</p>
           </div>
           <div class="taskRight">
-            <!-- <p
-              :class="{
-                categoryDone: todo.category == 'Completed',
-                categoryUndone: todo.category == 'Uncompleted',
-              }"
-            >
-              {{ todo.category }}
-            </p> -->
             <font-awesome-icon
               class="seeMoreTodo"
-              icon="fa-solid fa-ellipsis-vertical"
-              @click="$emit('show-settings', index); handleClickOutside()"
+              icon="fa-solid
+            fa-ellipsis-vertical"
+              @click="$emit('show-settings', index)"
+              v-if="todo.category !== 'Completed'"
             />
-            <div v-if="todo.customSettings == true " class="settings">
-              <section @click="visible = true; settingsRef = true">
+
+            <div v-if="todo.customSettings == true" class="settings">
+              <section
+                @click="
+                  visible = true;
+                  settingsRef = true;
+                "
+              >
                 <div class="settingsContainer">
                   <div class="settingsSubContainer">
                     <font-awesome-icon icon="fa-solid fa-file-pen" />
@@ -84,21 +86,44 @@ const visibleDeleteBool = ref(false)
                   </div>
                 </div>
               </section>
-              <section>
+              <section @click="visibleDialog = true">
                 <div class="settingsContainer">
                   <div class="settingsSubContainer">
                     <font-awesome-icon icon="fa-solid fa-circle-info" />
                     <div>Info</div>
                   </div>
                 </div>
+                <Dialog
+                  v-model:visible="visibleDialog"
+                  modal
+                  header="Additional information"
+                  :style="{ width: '50vw' }"
+                  class="infoDialog"
+                >
+                  <p>Name: {{ todo.todo }}</p>
+                  <p>Created: {{ todo.time }}</p>
+                  <p
+                    :class="{
+                      categoryDone: todo.category == 'Completed',
+                      categoryUndone: todo.category == 'Uncompleted',
+                    }"
+                  >
+                    Status: {{ todo.category }}
+                  </p>
+                </Dialog>
               </section>
               <section>
-                <div @click="$emit('delete-todo', index); visibleDeleteBool = true" class="settingsContainer" label="Delete">
+                <div
+                  @click="$emit('delete-todo', index)"
+                  class="settingsContainer"
+                  label="Delete"
+                >
                   <div class="settingsSubContainer">
                     <font-awesome-icon icon="fa-solid fa-box-archive" />
                     <div>Archive</div>
                   </div>
                 </div>
+                <ConfirmDialog></ConfirmDialog>
               </section>
             </div>
             <Dialog
@@ -110,20 +135,27 @@ const visibleDeleteBool = ref(false)
               <div class="dialogContent">
                 <input
                   v-model="editValue"
-                  @keyup.enter="(checkForError())? (todo.todo = editValue) && (visible = false) : (visible=false)"
+                  @keyup.enter="
+                    checkForError()
+                      ? (todo.todo = editValue) && (visible = false)
+                      : (visible = false)
+                  "
                   class="editInput"
                   type="text"
                   placeholder="Type something..."
                 />
                 <button
-                  @click="(checkForError())? (todo.todo = editValue) && (visible = false) : (visible=false)"
+                  @click="
+                    checkForError()
+                      ? (todo.todo = editValue) && (visible = false)
+                      : (visible = false)
+                  "
                   type="submit"
                 >
                   Confirm
                 </button>
               </div>
             </Dialog>
-            <ConfirmDialog v-if="visibleDeleteBool"></ConfirmDialog>
           </div>
         </div>
       </div>
@@ -183,24 +215,17 @@ const visibleDeleteBool = ref(false)
 
 .categoryUndone {
   background-color: rgba(255, 171, 203, 0.524);
-  padding: 5px 10px 5px 10px;
-  border-radius: 50px;
-  font-size: 0.8em;
-  font-weight: 500;
   user-select: none;
 }
 
 .categoryDone {
   background-color: rgba(155, 197, 255, 0.524);
-  padding: 5px 10px 5px 10px;
-  border-radius: 50px;
-  font-size: 0.8em;
-  font-weight: 500;
   user-select: none;
 }
 
 .myCheckbox {
   transform: scale(1.3);
+  cursor: pointer;
 }
 
 .seeMoreTodo {
@@ -288,5 +313,10 @@ const visibleDeleteBool = ref(false)
   border: none;
   outline: none;
   font-size: 0.95em;
+}
+
+.infoDialog p {
+  padding: 12px;
+  border-bottom: 1px rgba(128, 128, 128, 0.217) solid;
 }
 </style>

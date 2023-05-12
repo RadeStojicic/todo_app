@@ -4,18 +4,18 @@ import { v4 as uuidv4 } from "uuid";
 import TodoApp from "../components/TodoApp.vue";
 import TodoItem from "../components/TodoItem.vue";
 import { useConfirm } from "primevue/useconfirm";
-
+import { defineProps } from "vue";
 
 const todoList = ref([]);
 
 const createTodo = (todo) => {
   const current = new Date();
   const time =
-    current.getHours() +
+    ("0" + current.getHours()).toString().slice(-2) +
     ":" +
-    current.getMinutes() +
+    ("0" + current.getMinutes()).toString().slice(-2) +
     ":" +
-    +current.getSeconds();
+    ("0" + +current.getSeconds()).toString().slice(-2);
 
   todoList.value.push({
     id: uuidv4(),
@@ -24,12 +24,12 @@ const createTodo = (todo) => {
     isCompleted: false,
     category: "Uncompleted",
     isEditing: false,
-    customSettings: false
+    customSettings: false,
+    dueToDate: current,
   });
 };
 
 let category = ref("");
-
 const completeState = (index) => {
   todoList.value[index].isCompleted = !todoList.value[index].isCompleted;
   if (todoList.value[index].category == "Uncompleted") {
@@ -49,24 +49,22 @@ const showSettings = (index) => {
   });
 };
 
-
 const confirm = useConfirm();
 const deleteTodo = (index) => {
-  const isDeleteVisible = ref(false)
-    confirm.require({
-        message: 'Do you want to delete this task?',
-        header: 'Delete Confirmation',
-        icon: 'pi pi-info-circle',
-        acceptClass: 'p-button-danger',
-        accept: () => {
-             todoList.value = todoList.value.filter((todo) => todo.id!==todoList.value[index].id);
-              isDeleteVisible.value=false
-        },
-        reject: () => {
-            console.log("Reject") 
-            isDeleteVisible.value=false
-         }
-    });
+  confirm.require({
+    message: "Do you want to delete this task?",
+    header: "Delete Confirmation",
+    icon: "pi pi-info-circle",
+    acceptClass: "p-button-danger",
+    accept: () => {
+      todoList.value = todoList.value.filter(
+        (todo) => todo.id !== todoList.value[index].id
+      );
+    },
+    reject: () => {
+      console.log("Rejected.");
+    },
+  });
 };
 </script>
 

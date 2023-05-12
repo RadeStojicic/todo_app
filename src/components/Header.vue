@@ -8,12 +8,14 @@ import { RouterLink } from "vue-router";
       <div class="linksContainer">
         <div class="navLeft">
           <font-awesome-icon class="listIcon" :icon="['fas', 'fa-list']" />
-          <a class="siteName" href="#">To Do List</a>
+          <a class="siteName" href="#">Quick Task</a>
         </div>
         <ul class="navLinks">
-          <RouterLink to="/">All</RouterLink>
-          <RouterLink to="/done">Done</RouterLink>
-          <RouterLink to="/undone">Undone</RouterLink>
+          <RouterLink to="/">Home</RouterLink>
+          <RouterLink to="/pircing">Features</RouterLink>
+          <RouterLink to="/pircing">Pricing</RouterLink>
+          <RouterLink to="/contact">Contact</RouterLink>
+          <RouterLink class="signUp" to="/signup">Sign In</RouterLink>
         </ul>
       </div>
     </nav>
@@ -29,15 +31,16 @@ header {
 
 .siteName {
   text-decoration: none;
-  font-size: 1.3em;
+  font-size: 1.4em;
   font-weight: 600;
   width: 100%;
-  color: rgb(93, 93, 93);
+  color: rgb(19, 19, 21);
   text-decoration: line-through 2px #335af3;
+  font-weight: 700;
 }
 
 .listIcon {
-  color: #262628;
+  color: rgb(19, 19, 21);
   font-size: 1.8em;
 }
 .navLeft {
@@ -56,7 +59,7 @@ header {
 
 .navLinks {
   display: flex;
-  gap: 10px;
+  gap: 25px;
 }
 .navLinks div {
   display: flex;
@@ -65,9 +68,8 @@ header {
   text-decoration: none;
   display: flex;
   justify-content: center;
-  width: 80px;
-  border-radius: 30px;
-  padding: 7px 15px 7px 15px;
+  border-radius: 5px;
+  padding: 10px 5px 10px 5px;
   font-size: 0.95em;
   font-weight: 300;
 }
@@ -76,20 +78,24 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 40%;
+  max-width: 1300px;
+  width: 80%;
   margin: auto;
 }
 
 .router-link-active {
+  color: #335af3;
+}
+
+.signUp {
   color: white;
   background-color: #335af3;
   border-radius: 20px;
+  width: 100px;
 }
 
 .navLinks a:hover {
-  background-color: #335af3;
-  color: white;
-  transition: 0.2s;
+  color: #8da3ff;
 }
 
 .line {

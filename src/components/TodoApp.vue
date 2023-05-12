@@ -1,5 +1,7 @@
 <script setup>
 import { reactive, defineEmits } from "vue";
+import Calendar from "primevue/calendar";
+import { ref } from "vue";
 
 const emit = defineEmits(["create-todo"]);
 const taskState = reactive({
@@ -19,7 +21,9 @@ const createTask = () => {
   taskState.errorMessage = "Todo value cannot be empty.";
 };
 
+const date = ref("Due to");
 
+const minDate = ref(new Date());
 </script>
 <template>
   <div class="container">
@@ -36,6 +40,15 @@ const createTask = () => {
         <button class="createTask" @click="createTask()">
           <font-awesome-icon icon="fa-solid fa-plus" />
         </button>
+      </div>
+      <div class="card flex justify-content-center">
+        <Calendar
+          :minDate="minDate"
+          class="calendarContainer"
+          :dueToDate="date"
+          v-model="date"
+          showIcon
+        />
       </div>
     </div>
   </div>
@@ -56,13 +69,24 @@ const createTask = () => {
   width: 40%;
   margin: 50px auto;
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  gap: 30px;
 }
 
 .addTask {
   width: 100%;
   display: flex;
   gap: 10px;
+}
+
+.calendarContainer {
+  width: 100%;
+}
+
+.dueTo {
+  margin-bottom: 10px;
+  color: rgb(70, 70, 70);
 }
 
 .addTask input {
