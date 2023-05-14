@@ -3,11 +3,11 @@ import { ref } from "vue";
 import { v4 as uuidv4 } from "uuid";
 import TodoApp from "../components/TodoApp.vue";
 import TodoItem from "../components/TodoItem.vue";
+import Sidenav from "../components/Sidenav.vue";
 import { useConfirm } from "primevue/useconfirm";
-import { defineProps } from "vue";
 
+// create todo
 const todoList = ref([]);
-
 const createTodo = (todo) => {
   const current = new Date();
   const time =
@@ -39,6 +39,7 @@ const completeState = (index) => {
   }
 };
 
+// show settings
 const showSettings = (index) => {
   todoList.value.forEach((item, i) => {
     if (i === index) {
@@ -49,6 +50,7 @@ const showSettings = (index) => {
   });
 };
 
+// delete todo
 const confirm = useConfirm();
 const deleteTodo = (index) => {
   confirm.require({
@@ -70,22 +72,39 @@ const deleteTodo = (index) => {
 
 <template>
   <main>
-    <TodoApp @create-todo="createTodo" />
-    <ul>
-      <li>
-        <TodoItem
-          v-for="(todo, index) in todoList"
-          :key="index"
-          :index="index"
-          :todo="todo"
-          :category="category"
-          @complete-state="completeState"
-          @show-settings="showSettings"
-          @delete-todo="deleteTodo"
-        />
-      </li>
-    </ul>
+    <div class="todoTasks">
+      <TodoApp :numberOfTasks="arrayLength" @create-todo="createTodo" />
+      <ul>
+        <li>
+          <TodoItem
+            v-for="(todo, index) in todoList"
+            :key="index"
+            :index="index"
+            :todo="todo"
+            :category="category"
+            @complete-state="completeState"
+            @show-settings="showSettings"
+            @delete-todo="deleteTodo"
+          />
+        </li>
+      </ul>
+    </div>
   </main>
 </template>
 
-<style lang="sass" scoped></style>
+<style scoped>
+main {
+  background-color: whitesmoke;
+  height: 100vh;
+  margin-top: 50px;
+}
+
+.todoTasks {
+  background-color: whitesmoke;
+  padding-bottom: 50px;
+}
+
+.todoTasks ul li {
+  list-style: none;
+}
+</style>

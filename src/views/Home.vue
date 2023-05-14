@@ -1,5 +1,10 @@
+<script setup>
+import HeaderVue from "../components/Header.vue";
+</script>
+
 <template>
   <div class="container">
+    <HeaderVue />
     <div class="heroContainer">
       <h1 class="heroTitle">
         Take
@@ -18,8 +23,6 @@
   </div>
 </template>
 
-<script setup>
-</script>
 
 <style  scoped>
 .container {
@@ -33,12 +36,12 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  margin-top: 60px;
+  margin-top: 120px;
 }
 .heroTitle {
   width: 80%;
   text-align: center;
-  font-size: 3.2em;
+  font-size: 3.5em;
   font-weight: 800;
   color: rgb(18, 22, 29);
 }

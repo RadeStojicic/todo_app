@@ -12,19 +12,17 @@ import { faFilePen } from "@fortawesome/free-solid-svg-icons";
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import { faArrowRight} from "@fortawesome/free-solid-svg-icons";
+import { faInbox} from "@fortawesome/free-solid-svg-icons";
+import { faCalendarDays } from "@fortawesome/free-solid-svg-icons";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { faClipboard } from "@fortawesome/free-solid-svg-icons";
+import { faCalendarCheck} from "@fortawesome/free-solid-svg-icons";
+import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import PrimeVue from "primevue/config";
 import ConfirmationService from "primevue/confirmationservice";
 import ToastService from "primevue/toastservice";
 
-library.add(faList);
-library.add(faPlus);
-library.add(faEllipsis);
-library.add(faEllipsisVertical);
-library.add(faBoxArchive);
-library.add(faFilePen);
-library.add(faCircleInfo);
-library.add(faCheck);
-library.add(faArrowRight);
+library.add(faList,faPlus,faEllipsis,faEllipsisVertical,faBoxArchive,faFilePen,faCircleInfo,faCheck,faArrowRight,faInbox,faCalendarDays,faStar,faClipboard,faCalendarCheck,faTrashCan);
 
 const app = createApp(App);
 app.component("font-awesome-icon", FontAwesomeIcon);

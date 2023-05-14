@@ -165,13 +165,13 @@ const visibleDialog = ref(false);
 
 <style scoped>
 .tasksContainer {
-  width: 40%;
+  width: 95%;
   margin: 12px auto;
   display: flex;
   justify-content: center;
 }
 .newTask {
-  background-color: whitesmoke;
+  background-color: rgb(255, 255, 255);
   width: 100%;
   padding: 15px;
   border-radius: 10px;
@@ -183,7 +183,7 @@ const visibleDialog = ref(false);
 
 .newTask:hover {
   cursor: pointer;
-  background-color: rgb(237, 237, 237);
+  background-color: rgb(253, 253, 253);
 }
 
 .taskLeft {
@@ -238,7 +238,7 @@ const visibleDialog = ref(false);
 
 .settings {
   position: absolute;
-  right: -110px;
+  right: 20px;
   top: 40px;
   width: 160px;
   z-index: 1;

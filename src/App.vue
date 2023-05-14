@@ -4,7 +4,6 @@ import HeaderVue from "./components/Header.vue";
 </script>
 
 <template>
-  <HeaderVue />
   <RouterView />
 </template>
 

@@ -12,7 +12,7 @@ import { RouterLink } from "vue-router";
         </div>
         <ul class="navLinks">
           <RouterLink to="/">Home</RouterLink>
-          <RouterLink to="/pircing">Features</RouterLink>
+          <RouterLink to="/todo">Features</RouterLink>
           <RouterLink to="/pircing">Pricing</RouterLink>
           <RouterLink to="/contact">Contact</RouterLink>
           <RouterLink class="signUp" to="/signup">Sign In</RouterLink>
@@ -70,7 +70,7 @@ header {
   justify-content: center;
   border-radius: 5px;
   padding: 10px 5px 10px 5px;
-  font-size: 0.95em;
+  font-size: 1em;
   font-weight: 300;
 }
 .linksContainer {

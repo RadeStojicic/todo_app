@@ -66,7 +66,7 @@ const minDate = ref(new Date());
 }
 
 .todoContainer {
-  width: 40%;
+  width: 95%;
   margin: 50px auto;
   display: flex;
   flex-direction: column;
@@ -95,7 +95,7 @@ const minDate = ref(new Date());
   border-radius: 10px;
   border: none;
   outline: none;
-  background-color: whitesmoke;
+  background-color: rgb(255, 255, 255);
   font-size: 1em;
 }
 
@@ -104,7 +104,7 @@ const minDate = ref(new Date());
   border-radius: 10px;
   border: none;
   cursor: pointer;
-  background-color: whitesmoke;
+  background-color: rgb(255, 255, 255);
 }
 
 .fa-plus {
